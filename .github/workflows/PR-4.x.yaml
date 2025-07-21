@@ -1,7 +1,7 @@
 name: PR:4.x
 
 on:
-  pull_request:
+  push:
     branches:
       - 4.x
 
