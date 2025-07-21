@@ -288,7 +288,20 @@ void add_mul(float *dst, float *src1, float *src2, int w)
             _mm_storeu_ps(dst + j, c);
         }
     }
+#elif defined(__ARM_NEON)
+    for (; j <= w - 4; j += 4)
+    {
+        float32x4_t a = vld1q_f32(src1 + j);
+        float32x4_t b = vld1q_f32(src2 + j);
+        float32x4_t c = vld1q_f32(dst + j);
+
+        float32x4_t res = vmlaq_f32(c, a, b); 
+
+        vst1q_f32(dst + j, res);
+    }
 #endif
+
+    // Scalar fallback for remaining elements
     for (; j < w; j++)
     {
         dst[j] += src1[j] * src2[j];
