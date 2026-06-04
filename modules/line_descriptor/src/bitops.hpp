@@ -49,9 +49,13 @@
 #if defined(_M_ARM) || defined(_M_ARM64)
 static inline UINT32 popcnt(UINT32 v)
 {
+#if CV_NEON
+  return __popcnt(v);
+#else
     v = v - ((v >> 1) & 0x55555555);
     v = (v & 0x33333333) + ((v >> 2) & 0x33333333);
     return ((v + (v >> 4) & 0xF0F0F0F) * 0x1010101) >> 24;
+#endif
 }
 #else
 # include <intrin.h>
